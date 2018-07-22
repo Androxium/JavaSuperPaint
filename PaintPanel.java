@@ -50,21 +50,23 @@ public class PaintPanel extends JPanel {
         public void mousePressed( MouseEvent event ) {
             // draws the specificed shape
             // draw a line
-            if ( shapeType == 0 ){
-                currentShape = new Line( event.getX(), event.getY(), event.getX(), event.getY(), currentColor );
+            if (currentShape == null){
+                if ( shapeType == 0 ){
+                    currentShape = new Line( event.getX(), event.getY(), event.getX(), event.getY(), currentColor );
+                }
+                // draw a rectangle
+                else if ( shapeType == 1 ){
+                    currentShape = new Rectangle( event.getX(), event.getY(), event.getX(), event.getY(), 
+                                                 currentColor, isFilled );
+                }
+                // draw an oval
+                else if ( shapeType == 2 ){
+                    currentShape = new Oval( event.getX(), event.getY(), event.getX(), event.getY(), 
+                                            currentColor, isFilled );
+                }
+                // Tell JVM to call paintComponent( g )
+                repaint();
             }
-            // draw a rectangle
-            else if ( shapeType == 1 ){
-                currentShape = new Rectangle( event.getX(), event.getY(), event.getX(), event.getY(), 
-                                             currentColor, isFilled );
-            }
-            // draw an oval
-            else if ( shapeType == 2 ){
-                currentShape = new Oval( event.getX(), event.getY(), event.getX(), event.getY(), 
-                                        currentColor, isFilled );
-            }
-            // Tell JVM to call paintComponent( g )
-            repaint();
         } 
         
         /* This method checks for a mouse release to indicate the shape has been finished. This method accepts 1
@@ -73,16 +75,21 @@ public class PaintPanel extends JPanel {
         @Override
         public void mouseReleased( MouseEvent event ) {
             // Update ending coordinates
-            currentShape.setX2( event.getX() );
-            currentShape.setY2( event.getY() );
-            currentShape.setColor( currentColor );
-            
-            // add the new shape to the END of the LinkedList
-            shapeList.addLast( currentShape );
-            
-            // Get ready for the next line to be drawn
-            currentShape = null;
-            repaint();            
+            if (currentShape != null){
+                currentShape.setX2( event.getX() );
+                currentShape.setY2( event.getY() );
+                currentShape.setColor( currentColor );
+                
+                // add the new shape to the END of the LinkedList
+                shapeList.addLast( currentShape );
+                
+                // Get ready for the next line to be drawn
+                currentShape = null;
+                repaint();
+                
+                // clear the redo stack
+                redoStack.clear();
+            }
         } 
         
         /* This method updates the ending coordinates of currentShape and statusLabel as the mouse is dragged. 
@@ -90,10 +97,12 @@ public class PaintPanel extends JPanel {
          */
         @Override
         public void mouseDragged( MouseEvent event ) {
-            currentShape.setX2( event.getX() );
-            currentShape.setY2( event.getY() );
-            statusLabel.setText( String.format( "(%d, %d)", event.getX(), event.getY() ) );
-            repaint();
+            if (currentShape != null){
+                currentShape.setX2( event.getX() );
+                currentShape.setY2( event.getY() );
+                statusLabel.setText( String.format( "(%d, %d)", event.getX(), event.getY() ) );
+                repaint();
+            }
         } 
         
         /* This method updates the statusLabel as the mouse is moved. This method accepts 1 parameter: a reference to 
