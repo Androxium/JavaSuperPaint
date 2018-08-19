@@ -1,7 +1,7 @@
 /*
  * Name: Thomas Cheng
  * 
- * Date: May 2, 2018
+ * Date: July 22, 2018
  * 
  * Dsscription: This is the PaintPanel class that will draw all the shapes.
  */
@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 
 import java.awt.Graphics;
+import java.awt.GradientPaint;
 import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
@@ -22,8 +23,13 @@ public class PaintPanel extends JPanel {
     private JLabel statusLabel;
     private Shape currentShape = null;
     private int shapeType;
-    private Color currentColor;
+    private Color colourOne;
+    private Color colourTwo;
     private boolean isFilled;
+    private boolean isGradient;
+    private double lineSize;
+    private boolean isDashLine;
+    private double dashLineLength;
     
     /* This is the constructor method for the class. This method accepts 1 parameter: a reference to a JLabel object.
      */
@@ -52,17 +58,18 @@ public class PaintPanel extends JPanel {
             // draw a line
             if (currentShape == null){
                 if ( shapeType == 0 ){
-                    currentShape = new Line( event.getX(), event.getY(), event.getX(), event.getY(), currentColor );
+                    currentShape = new Line( event.getX(), event.getY(), event.getX(), event.getY(), colourOne, 
+                                            colourTwo, isGradient, lineSize );
                 }
                 // draw a rectangle
                 else if ( shapeType == 1 ){
                     currentShape = new Rectangle( event.getX(), event.getY(), event.getX(), event.getY(), 
-                                                 currentColor, isFilled );
+                                                 colourOne, colourTwo, isGradient, isFilled, lineSize );
                 }
                 // draw an oval
                 else if ( shapeType == 2 ){
                     currentShape = new Oval( event.getX(), event.getY(), event.getX(), event.getY(), 
-                                            currentColor, isFilled );
+                                            colourOne, colourTwo, isGradient, isFilled, lineSize);
                 }
                 // Tell JVM to call paintComponent( g )
                 repaint();
@@ -78,7 +85,7 @@ public class PaintPanel extends JPanel {
             if (currentShape != null){
                 currentShape.setX2( event.getX() );
                 currentShape.setY2( event.getY() );
-                currentShape.setColor( currentColor );
+                currentShape.setColourOne( colourOne );
                 
                 // add the new shape to the END of the LinkedList
                 shapeList.addLast( currentShape );
@@ -172,8 +179,12 @@ public class PaintPanel extends JPanel {
     /* This is the mutator method for currentColor. This method accepts 1 parameter: a reference to a Color object.
      * This method returns no values.
      */
-    public void setShapeColor( Color color ) {
-        currentColor = color;
+    public void setColourOne( Color colour ) {
+        colourOne = colour;
+    }
+    
+    public void setColourTwo( Color colour ) {
+        colourTwo = colour;
     }
     
     /* This is the mutator method for isFilled. This method accepts 1 parameter: an boolean value representing whether
@@ -181,5 +192,20 @@ public class PaintPanel extends JPanel {
      */
     public void setFill( boolean isFilled ) {
         this.isFilled = isFilled;
+    }
+    
+    public void setIsGradient( boolean isGradient ) {
+        this.isGradient = isGradient;
+    }
+    
+    public void setLineSize( double lineSize ){
+        this.lineSize = lineSize;
+    }
+    
+    public void setLineStyle(  ) {
+    }
+    
+    public void setDashLineLength( double dashLineLength ) {
+        this.dashLineLength = dashLineLength;
     }
 }

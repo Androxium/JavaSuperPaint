@@ -15,9 +15,10 @@ abstract public class FillableShape extends Shape{
      * representing the starting and ending coordinates of the line respectively, a reference to a Color object, and
      * a boolean value representing whether the oval is filled or not.
      */
-    public FillableShape(int x1, int y1, int x2, int y2, Color color, boolean filled){
-        super(x1, y1, x2, y2, color);
-        this.filled = filled;
+    public FillableShape(int x1, int y1, int x2, int y2, Color colourOne, Color colourTwo, boolean isGradient, 
+                         boolean isFilled, double lineSize){
+        super(x1, y1, x2, y2, colourOne, colourTwo, isGradient, lineSize);
+        this.filled = isFilled;
     }
     
     /* This is the accessor method for "filled" . This method returns the boolean value of "filled". This method
@@ -33,7 +34,7 @@ abstract public class FillableShape extends Shape{
     public void setFilling( boolean newFill){
         filled = newFill;
     }
-    
+  
     /* This method will return the upper left x value of the rectangle. This method returns 1 value: the min int value
      * between x1 and x2.
      */
